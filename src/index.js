@@ -354,6 +354,7 @@ export default class InfiniteCalendar extends Component {
 			keyboardSupport,
 			layout,
 			overscanMonthCount,
+			badges,
 			min,
 			minDate,
 			max,
@@ -396,6 +397,10 @@ export default class InfiniteCalendar extends Component {
 							disabledDays={disabledDays}
 							months={this.months}
 							onDaySelect={this.onDaySelect}
+							onDayDown={this.onDayDown}
+							onDayOver={this.onDayOver}
+							onDayUp={this.onDayUp}
+							badges={badges}
 							onScroll={this.onScroll}
 							isScrolling={isScrolling}
 							today={today}

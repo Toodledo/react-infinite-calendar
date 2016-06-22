@@ -81,7 +81,7 @@ export default class List extends Component {
 		}
 	};
 	renderMonth = ({index, isScrolling}) => {
-		let {disabledDates, disabledDays, locale, months, maxDate, minDate, onDaySelect, rowHeight, selectedDate, showOverlay, theme, today} = this.props;
+		let {disabledDates, disabledDays, badges, locale, months, maxDate, minDate, onDaySelect, onDayDown, onDayOver, onDayUp, rowHeight, selectedDate, selectedDateEnd, showOverlay, theme, today} = this.props;
 		let {date, rows} = this.memoize(months[index]);
 
 		return (
@@ -89,6 +89,7 @@ export default class List extends Component {
 				key={`Month-${index}`}
 				selectedDate={selectedDate}
 				displayDate={date}
+				badges={badges}
 				disabledDates={disabledDates}
 				disabledDays={disabledDays}
 				maxDate={maxDate}
