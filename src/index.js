@@ -28,6 +28,10 @@ export default class InfiniteCalendar extends Component {
 		this.updateYears(props);
 		this.state = {
 			selectedDate: this.parseSelectedDate(props.selectedDate),
+			selectedHovering: null,
+			selectedDateEnd: this.parseSelectedDate(props.selectedDateEnd),
+			dragging: 0, //direction -1 reverse 0 nodrag 1 forwards
+			touchBehavior: false,
 			display: props.display,
 			shouldHeaderAnimate: props.shouldHeaderAnimate
 		};
@@ -40,12 +44,15 @@ export default class InfiniteCalendar extends Component {
 		layout: 'portrait',
 		display: 'days',
 		selectedDate: new Date(),
+		selectedDateEnd: new Date(),
+		endDate: new Date(),
 		min: {year: 1980, month: 0, day: 0},
 		minDate: {year: 1980, month: 0, day: 0},
 		max: {year: 2050, month: 11, day: 31},
 		maxDate: {year: 2050, month: 11, day: 31},
 		keyboardSupport: true,
 		autoFocus: true,
+		allowRanges: false,
 		shouldHeaderAnimate: true,
 		showOverlay: true,
 		showTodayHelper: true,
@@ -57,6 +64,8 @@ export default class InfiniteCalendar extends Component {
 	};
 	static propTypes = {
 		selectedDate: validDate,
+		selectedDateEnd: validDate,
+		endDate: validDate,
 		min: validDate,
 		max: validDate,
 		minDate: validDate,
@@ -77,6 +86,7 @@ export default class InfiniteCalendar extends Component {
 		onScrollEnd: PropTypes.func,
 		keyboardSupport: PropTypes.bool,
 		autoFocus: PropTypes.bool,
+		allowRanges: PropTypes.bool,
 		onKeyDown: PropTypes.func,
 		tabIndex: PropTypes.number,
 		layout: validLayout,
@@ -162,25 +172,149 @@ export default class InfiniteCalendar extends Component {
 	getTheme(customTheme = this.props.theme) {
 		return Object.assign({}, defaultTheme, customTheme);
 	}
-	onDaySelect = (selectedDate, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
+	onDaySelect = (clickedDate, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
 		let {afterSelect, beforeSelect, onSelect} = this.props;
 
-		if (!beforeSelect || typeof beforeSelect == 'function' && beforeSelect(selectedDate)) {
+		var selectedDate = this.state.selectedDate;
+		var selectedDateEnd = this.state.selectedDateEnd;
+
+		var dragging = 0;
+
+		if(this.state.touchBehavior) {
+			if(this.state.dragging==0) {
+				selectedDate = clickedDate;
+				selectedDateEnd = clickedDate;
+				dragging = 1;
+			} else {
+				if(clickedDate>selectedDate) {
+					selectedDateEnd = clickedDate;
+				} else {
+					selectedDate = clickedDate;
+				}
+			}
+		} else {
+			selectedDate = clickedDate;
+			selectedDateEnd = clickedDate;
+			if(this.state.selectedDate == selectedDate) return;
+		}
+
+		if (!beforeSelect || typeof beforeSelect == 'function' && beforeSelect(selectedDate,selectedDateEnd)) {
 			if (typeof onSelect == 'function') {
-				onSelect(selectedDate, e);
+				onSelect(selectedDate,selectedDateEnd, e);
 			}
 
 			this.setState({
 				selectedDate,
+				selectedDateEnd,
+				dragging,
 				shouldHeaderAnimate,
 				highlightedDate: selectedDate.clone()
 			}, () => {
 				this.clearHighlight();
 				if (typeof afterSelect == 'function') {
-					afterSelect(selectedDate);
+					afterSelect(selectedDate,selectedDateEnd);
 				}
 			});
 		}
+	};
+	onDayDown = (selectedDate, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
+		let {afterSelect, beforeSelect, onSelect} = this.props;
+
+		if(this.state.touchBehavior || !this.props.allowRanges) return;
+
+		if (!beforeSelect || typeof beforeSelect == 'function' && beforeSelect(selectedDate,null)) {
+			if (typeof onSelect == 'function') {
+				onSelect(selectedDate, null, e);
+			}
+			
+			var dragging = 1;
+			var selectedDateEnd = selectedDate;
+			var selectedHovering = null;
+			this.setState({
+				selectedDate,
+				selectedDateEnd,
+				selectedHovering,
+				dragging,
+				shouldHeaderAnimate,
+				highlightedDate: selectedDate.clone()
+			}, () => {
+				this.clearHighlight();
+				if (typeof afterSelect == 'function') {
+					afterSelect(selectedDate,null);
+				}
+			});
+		}
+	};
+	onDayOver = (selectedHovering, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
+		if(this.state.dragging!==0 && this.props.allowRanges) {
+			var selectedDate = this.state.selectedDate;
+			var selectedDateEnd = this.state.selectedDateEnd;
+			var dragging = this.state.dragging;
+
+			if(dragging==1) {
+				selectedDateEnd = selectedHovering;
+			} else if(dragging==-1) {
+				selectedDate = selectedHovering;
+			}
+			if(selectedDate>selectedDateEnd) {
+				dragging = -dragging;
+				var tmp = selectedDate;
+				selectedDate = selectedDateEnd;
+				selectedDateEnd = tmp;
+			}
+
+			this.setState({
+				selectedDate,
+				selectedDateEnd,
+				selectedHovering,
+				dragging
+			});
+		}
+	};
+	onDayUp = (overDate, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
+		let {afterSelect, beforeSelect, onSelect} = this.props;
+		if(this.state.dragging!==0 && !this.state.touchBehavior && this.props.allowRanges) {
+
+			var selectedDate = this.state.selectedDate;
+			var selectedDateEnd = this.state.selectedDateEnd;
+
+			if(this.state.dragging==1) {
+				selectedDateEnd = overDate;
+			} else if(this.state.dragging==-1) {
+				selectedDate = overDate;
+			}
+			if(selectedDate>selectedDateEnd) {
+				var tmp = selectedDate;
+				selectedDate = selectedDateEnd;
+				selectedDateEnd = tmp;
+			}
+
+			if (!beforeSelect || typeof beforeSelect == 'function' && beforeSelect(selectedDate,selectedDateEnd)) {
+				if (typeof onSelect == 'function') {
+					onSelect(selectedDate, selectedDateEnd, e);
+				}
+
+				var dragging = 0;
+				var selectedHovering = null;
+				this.setState({
+					selectedDate,
+					selectedDateEnd,
+					selectedHovering,
+					dragging,
+					shouldHeaderAnimate
+				}, () => {
+					this.clearHighlight();
+					if (typeof afterSelect == 'function') {
+						afterSelect(selectedDate, selectedDateEnd);
+					}
+				});
+
+			}
+		}
+	};
+	onTouchStart = (startDate, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
+		var touchBehavior = true;
+		this.setState({touchBehavior});
 	};
 	getCurrentOffset = () => {
 		return this.scrollTop;
@@ -368,7 +502,7 @@ export default class InfiniteCalendar extends Component {
 		let disabledDates = this.getDisabledDates(this.props.disabledDates);
 		let locale = this.getLocale();
 		let theme = this.getTheme();
-		let {display, isScrolling, selectedDate, showToday, shouldHeaderAnimate} = this.state;
+		let {display, isScrolling, selectedDate, dragging, selectedDateEnd, selectedHovering, showToday, shouldHeaderAnimate} = this.state;
 		let today = this.today = parseDate(moment());
 
 		// Selected date should not be disabled
@@ -379,7 +513,7 @@ export default class InfiniteCalendar extends Component {
 		return (
 			<div tabIndex={tabIndex} onKeyDown={keyboardSupport && this.handleKeyDown} className={classNames(className, style.container.root, {[style.container.landscape]: layout == 'landscape'})} style={{color: theme.textColor.default, width}} aria-label="Calendar" ref="node">
 				{showHeader &&
-					<Header selectedDate={selectedDate} shouldHeaderAnimate={shouldHeaderAnimate} layout={layout} theme={theme} locale={locale} scrollToDate={this.scrollToDate} setDisplay={this.setDisplay} display={display} />
+					<Header selectedDate={selectedDate} selectedDateEnd={selectedDateEnd} shouldHeaderAnimate={shouldHeaderAnimate} layout={layout} theme={theme} locale={locale} scrollToDate={this.scrollToDate} setDisplay={this.setDisplay} display={display} />
 				}
 				<div className={style.container.wrapper}>
 					<Weekdays theme={theme} />
@@ -393,6 +527,9 @@ export default class InfiniteCalendar extends Component {
 							width={width}
 							height={height}
 							selectedDate={parseDate(selectedDate)}
+							dragging={dragging}
+							selectedHovering={parseDate(selectedHovering)}
+							selectedDateEnd={parseDate(selectedDateEnd)}
 							disabledDates={disabledDates}
 							disabledDays={disabledDays}
 							months={this.months}
@@ -401,6 +538,7 @@ export default class InfiniteCalendar extends Component {
 							onDayOver={this.onDayOver}
 							onDayUp={this.onDayUp}
 							badges={badges}
+							onTouchStart={this.onTouchStart}
 							onScroll={this.onScroll}
 							isScrolling={isScrolling}
 							today={today}
