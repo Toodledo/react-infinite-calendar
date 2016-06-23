@@ -43,7 +43,8 @@ export default class Month extends Component {
 				);
 
 				var badge = "";
-				if(badges && badges[date.yyyymmdd]) badge = badges[date.yyyymmdd];
+				if(badges && (typeof badges == 'function')) badge = badges(date);
+				else if(badges && badges[date.yyyymmdd]) badge = badges[date.yyyymmdd];
 
 				days[k] = (
 					<Day
