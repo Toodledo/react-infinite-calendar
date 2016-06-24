@@ -174,8 +174,8 @@ export default class InfiniteCalendar extends Component {
 	getTheme(customTheme = this.props.theme) {
 		return Object.assign({}, defaultTheme, customTheme);
 	}
-	onDaySelect = (clickedDate, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
-		let {afterSelect, beforeSelect, onSelect} = this.props;
+	onDaySelect = (clickedDate, e) => {
+		let {afterSelect, beforeSelect, onSelect, shouldHeaderAnimate} = this.props;
 
 		var selectedDate = this.state.selectedDate;
 		var selectedDateEnd = this.state.selectedDateEnd;
@@ -209,7 +209,6 @@ export default class InfiniteCalendar extends Component {
 				selectedDate,
 				selectedDateEnd,
 				dragging,
-				shouldHeaderAnimate,
 				highlightedDate: selectedDate.clone()
 			}, () => {
 				this.clearHighlight();
@@ -219,7 +218,7 @@ export default class InfiniteCalendar extends Component {
 			});
 		}
 	};
-	onDayDown = (selectedDate, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
+	onDayDown = (selectedDate, e) => {
 		let {afterSelect, beforeSelect, onSelect} = this.props;
 
 		if(this.state.touchBehavior || !this.props.allowRanges) return;
@@ -237,7 +236,6 @@ export default class InfiniteCalendar extends Component {
 				selectedDateEnd,
 				selectedHovering,
 				dragging,
-				shouldHeaderAnimate,
 				highlightedDate: selectedDate.clone()
 			}, () => {
 				this.clearHighlight();
@@ -247,7 +245,7 @@ export default class InfiniteCalendar extends Component {
 			});
 		}
 	};
-	onDayOver = (selectedHovering, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
+	onDayOver = (selectedHovering, e) => {
 		if(this.state.dragging!==0 && !this.state.touchBehavior && this.props.allowRanges) {
 			var selectedDate = this.state.selectedDate;
 			var selectedDateEnd = this.state.selectedDateEnd;
@@ -273,7 +271,7 @@ export default class InfiniteCalendar extends Component {
 			});
 		}
 	};
-	onDayUp = (overDate, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
+	onDayUp = (overDate, e) => {
 		let {afterSelect, beforeSelect, onSelect} = this.props;
 		if(this.state.dragging!==0 && !this.state.touchBehavior && this.props.allowRanges) {
 
@@ -303,7 +301,6 @@ export default class InfiniteCalendar extends Component {
 					selectedDateEnd,
 					selectedHovering,
 					dragging,
-					shouldHeaderAnimate
 				}, () => {
 					this.clearHighlight();
 					if (typeof afterSelect == 'function') {
@@ -314,7 +311,7 @@ export default class InfiniteCalendar extends Component {
 			}
 		}
 	};
-	onTouchStart = (startDate, e, shouldHeaderAnimate = this.props.shouldHeaderAnimate) => {
+	onTouchStart = (startDate, e) => {
 		var touchBehavior = true;
 		this.setState({touchBehavior});
 	};
