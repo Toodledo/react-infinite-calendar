@@ -15,6 +15,9 @@ export default function Day({currentYear, date, day, badge, handleDayClick, hand
 	else if(dragging==-1 && !isSelectedEnd && !isDisabled) backgroundColor = (typeof theme.selectionHoverColor == 'function') ? theme.selectionHoverColor(mmt) : theme.selectionHoverColor;
 	else if(isDisabled) backgroundColor = (typeof theme.selectionDisabledColor == 'function') ? theme.selectionDisabledColor(mmt) : theme.selectionDisabledColor;
 
+	var today = new Date();
+	var badgeStyle = style.badge;
+	if(date.date && date.date.isBefore(today)) badgeStyle += " "+style.badge_overdue;
 
 	return (
 		<li
@@ -29,7 +32,7 @@ export default function Day({currentYear, date, day, badge, handleDayClick, hand
 		>
 			{(day === 1) && <span className={style.month}>{monthShort}</span>}
 			<span>{day}</span>
-			{(badge!=="") && <span className={style.badge}>{badge}</span>}
+			{(badge!=="") && <span className={badgeStyle}>{badge}</span>}
 			{(day === 1 && currentYear !== year) && <span className={style.year}>{year}</span>}
 			{(isSelected || isSelectedEnd) &&
 				<div className={highlightStyle} style={{backgroundColor: backgroundColor, color: theme.textColor.active}}>

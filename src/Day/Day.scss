@@ -82,6 +82,10 @@
         &.disabled:before {
             box-shadow: inset 0 0 0 1px #BBB;
         }
+        &.badge {
+            background-color: #2581ca;
+            color: #fff;
+        }
     }
     &.selected {
         position: relative;
@@ -144,8 +148,10 @@
 }
 
 .badge {
-    background-color: #ddd;
+    background-color: #919191;
+    color: #fff;
     font-size: 0.8em;
+    font-weight: bold;
     border-radius: 50%;
     padding: 2px;
     z-index:6;
@@ -153,4 +159,7 @@
     height: 1em;
     min-width: 1em;
     line-height: 1em;
+}
+.badge_overdue {
+    background-color: #d8292d;
 }
