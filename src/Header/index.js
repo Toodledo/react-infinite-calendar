@@ -19,61 +19,69 @@ export default class Header extends Component {
 	shouldComponentUpdate(nextProps) {
 		return shallowCompare(this, nextProps);
 	}
-	getDateValues(selectedDate) {
-		let {display, locale, scrollToDate, setDisplay} = this.props;
+	getDateValues() {
+		let {display, locale, scrollToDate, setDisplay, selectedDate, selectedDateEnd} = this.props;
 
-		return [
-			{
-				item: 'year',
-				value: selectedDate.year(),
-				active: (display === 'years'),
-				title: (display === 'days') ? `Change year` : null,
-				handleClick: (e) => {
-					e && e.stopPropagation();
-					setDisplay('years');
+		var values = [{
+			item: 'day',
+			key: selectedDate.format('YYYYMMDD'),
+			value: selectedDate.format(locale.headerFormat),
+			active: (display === 'days'),
+			title: (display === 'days') ? `Scroll to ${selectedDate.format(locale.headerFormat)}` : null,
+			handleClick: (e) => {
+				e && e.stopPropagation();
+
+				if (display !== 'days') {
+					setDisplay('days');
+				} else if (selectedDate) {
+					scrollToDate(selectedDate, -40);
 				}
-			},
-			{
-				item: 'day',
-				key: selectedDate.format('YYYYMMDD'),
-				value: selectedDate.format(locale.headerFormat),
+			}
+		}];
+
+		if(selectedDate && selectedDateEnd && !selectedDate.isSame(selectedDateEnd)) {
+			values[0].item = "start";
+			var numDays = selectedDateEnd.diff(selectedDate,'days')+1;
+			values.push({
+				item: 'end',
+				key: selectedDateEnd.format('YYYYMMDD'),
+				value: locale.rangeLabel+" "+selectedDateEnd.format(locale.headerFormat),
+				rangeHint: <i>{numDays} days</i>,
 				active: (display === 'days'),
-				title: (display === 'days') ? `Scroll to ${selectedDate.format(locale.headerFormat)}` : null,
+				title: (display === 'days') ? `Scroll to ${selectedDateEnd.format(locale.headerFormat)}` : null,
 				handleClick: (e) => {
 					e && e.stopPropagation();
 
 					if (display !== 'days') {
 						setDisplay('days');
-					} else if (selectedDate) {
-						scrollToDate(selectedDate, -40);
+					} else if (selectedDateEnd) {
+						scrollToDate(selectedDateEnd, -40);
 					}
 				}
-			}
-		];
+			});
+		}
+
+		return values;
 	}
 	render() {
 		let {layout, locale, selectedDate, selectedDateEnd, shouldHeaderAnimate, theme} = this.props;
-		let startValues = selectedDate && this.getDateValues(selectedDate);
-		// let numDays = selectedDateEnd.diff(selectedDate,'days');
-		let endLabel = "";
-		if(selectedDate && selectedDateEnd && !selectedDate.isSame(selectedDateEnd)) endLabel = locale.rangeLabel+" "+selectedDateEnd.format(locale.headerFormat);
+		let dateValues = selectedDate && this.getDateValues();
 
 		return (
 			<div className={classNames(style.root, {[style.blank]: !selectedDate, [style.landscape]: layout == 'landscape'})} style={theme && {backgroundColor: theme.headerColor, color: theme.textColor.active}}>
 				{(selectedDate) ?
 					<div className={style.wrapper} aria-label={selectedDate.format(locale.headerFormat + ' YYYY')}>
-						{startValues.map(({handleClick, item, key, value, active, title}) => {
+						{dateValues.map(({handleClick, item, key, value, active, title,rangeHint}) => {
 							return (
 								<div key={item} className={classNames(style.dateWrapper, style[item], {[style.active]: active})} title={title}>
 									<ReactCSSTransitionGroup transitionName={animation} transitionEnterTimeout={250} transitionLeaveTimeout={250} transitionEnter={shouldHeaderAnimate} transitionLeave={shouldHeaderAnimate}>
 										<span key={`${item}-${key || value}`} className={style.date} aria-hidden={true} onClick={handleClick}>
-											{value}
+											{value} {rangeHint}
 										</span>
 									</ReactCSSTransitionGroup>
 								</div>
 							);
 						})}
-						<span className={style.rangeLabel}>{ endLabel }</span>
 					</div>
 				: <div className={style.wrapper}>{locale.blank}</div>}
 			</div>
