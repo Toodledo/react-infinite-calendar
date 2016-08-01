@@ -11,7 +11,7 @@ export default class Header extends Component {
 		locale: PropTypes.object,
 		onClick: PropTypes.func,
 		selectedDate: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-		selectedDateEnd: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+		rangeSelectionEndDate: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
 		shouldHeaderAnimate: PropTypes.bool,
 		theme: PropTypes.object,
 		display: PropTypes.string
@@ -20,7 +20,7 @@ export default class Header extends Component {
 		return shallowCompare(this, nextProps);
 	}
 	getDateValues() {
-		let {display, locale, scrollToDate, setDisplay, selectedDate, selectedDateEnd} = this.props;
+		let {display, locale, scrollToDate, setDisplay, selectedDate, rangeSelectionEndDate} = this.props;
 
 		var values = [{
 			item: 'day',
@@ -39,23 +39,23 @@ export default class Header extends Component {
 			}
 		}];
 
-		if(selectedDate && selectedDateEnd && !selectedDate.isSame(selectedDateEnd)) {
+		if(selectedDate && rangeSelectionEndDate && !selectedDate.isSame(rangeSelectionEndDate)) {
 			values[0].item = "start";
-			var numDays = selectedDateEnd.diff(selectedDate,'days')+1;
+			var numDays = rangeSelectionEndDate.diff(selectedDate,'days')+1;
 			values.push({
 				item: 'end',
-				key: selectedDateEnd.format('YYYYMMDD'),
-				value: locale.rangeLabel+" "+selectedDateEnd.format(locale.headerFormat),
+				key: rangeSelectionEndDate.format('YYYYMMDD'),
+				value: locale.rangeLabel+" "+rangeSelectionEndDate.format(locale.headerFormat),
 				rangeHint: <i>{numDays} days</i>,
 				active: (display === 'days'),
-				title: (display === 'days') ? `Scroll to ${selectedDateEnd.format(locale.headerFormat)}` : null,
+				title: (display === 'days') ? `Scroll to ${rangeSelectionEndDate.format(locale.headerFormat)}` : null,
 				handleClick: (e) => {
 					e && e.stopPropagation();
 
 					if (display !== 'days') {
 						setDisplay('days');
-					} else if (selectedDateEnd) {
-						scrollToDate(selectedDateEnd, -40);
+					} else if (rangeSelectionEndDate) {
+						scrollToDate(rangeSelectionEndDate, -40);
 					}
 				}
 			});
@@ -64,7 +64,7 @@ export default class Header extends Component {
 		return values;
 	}
 	render() {
-		let {layout, locale, selectedDate, selectedDateEnd, shouldHeaderAnimate, theme} = this.props;
+		let {layout, locale, selectedDate, rangeSelectionEndDate, shouldHeaderAnimate, theme} = this.props;
 		let dateValues = selectedDate && this.getDateValues();
 
 		return (
