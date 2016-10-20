@@ -154,7 +154,7 @@ export default class InfiniteCalendar extends Component {
 				var parsed = this.parseSelectedDate(nextSelectedDate);
 				this.setState({
 					selectedDate: parsed,
-					rangeSelectionEndDate: this.parseSelectedDate(nextSelectedDateEnd)					
+					rangeSelectionEndDate: this.parseSelectedDate(nextSelectedDateEnd)
 				});
 				if(parsed) this.scrollToDate(parsed,-this.props.rowHeight);
 			} else if (nextSelectedDateEnd !== rangeSelectionEndDate) {
@@ -546,6 +546,7 @@ export default class InfiniteCalendar extends Component {
 			minDate,
 			max,
 			maxDate,
+			rangeSelection,
 			showTodayHelper,
 			showHeader,
 			tabIndex,
@@ -586,6 +587,7 @@ export default class InfiniteCalendar extends Component {
 							disabledDates={disabledDates}
 							disabledDays={disabledDays}
 							months={this.months}
+							rangeSelection={rangeSelection}
 							onDaySelect={this.onDaySelect}
 							onDayDown={this.onDayDown}
 							onDayOver={this.onDayOver}

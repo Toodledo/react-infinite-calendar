@@ -3,8 +3,8 @@ module.exports = {
         default: '#333',
         active: '#FFF'
     },
-    selectionColor: '#559FFF',
-    selectionHoverColor: '#99cFFF',
+    selectionColor: '#448AFF',
+    selectionRangeColor: '#559FFF',
     selectionDisabledColor: '#ccc',
     todayColor: '#FFA726',
     weekdayColor: '#559FFF',
