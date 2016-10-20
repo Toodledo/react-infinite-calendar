@@ -1,28 +1,44 @@
 import React from 'react';
 const style = require('./Day.scss');
 
-export default function Day({currentYear, date, day, badge, handleDayClick, handleDayDown, handleDayOver, handleDayUp, handleTouchStart, isDisabled, isToday, isSelected, isHovered, dragging, isSelectedBetween, isSelectedEnd, monthShort, locale, theme}) {
+export default function Day({currentYear, date, day, badge, handleDayClick, handleDayDown, handleDayOver, handleDayUp, handleTouchStart, rangeSelection, isDisabled, isToday, isSelected, isHovered, dragging, isSelectedBetween, isSelectedEnd, monthShort, locale, theme}) {
 	var {date: mmt, yyyymmdd} = date;
 	var year = mmt.year();
 
 	var highlightStyle = style.selection;
-	if(isSelected && (!isSelectedEnd || dragging!==0)) highlightStyle += " "+style.selectionStart;
-	else if(!isSelected && isSelectedEnd) highlightStyle += " "+style.selectionEnd;
-	else if(!isSelected && !isSelectedEnd && isSelectedBetween) highlightStyle += " "+style.selectionBetween;
-	
+
 	var backgroundColor = (typeof theme.selectionColor == 'function') ? theme.selectionColor(mmt) : theme.selectionColor;
-	if(dragging==1 && !isSelected && !isDisabled) backgroundColor = (typeof theme.selectionHoverColor == 'function') ? theme.selectionHoverColor(mmt) : theme.selectionHoverColor;
-	else if(dragging==-1 && !isSelectedEnd && !isDisabled) backgroundColor = (typeof theme.selectionHoverColor == 'function') ? theme.selectionHoverColor(mmt) : theme.selectionHoverColor;
-	else if(isDisabled) backgroundColor = (typeof theme.selectionDisabledColor == 'function') ? theme.selectionDisabledColor(mmt) : theme.selectionDisabledColor;
 
 	var today = new Date();
 	var badgeStyle = style.badge;
 	if(date.date && date.date.isBefore(today)) badgeStyle += " "+style.badge_overdue;
 
+	var dayContainerStyles = {};
+	if (isToday) dayContainerStyles.color = theme.todayColor;
+
+	if (rangeSelection) {
+		if(isSelected && (!isSelectedEnd || dragging!==0)) highlightStyle += " "+style.selectionStart;
+		else if(!isSelected && isSelectedEnd) highlightStyle += " "+style.selectionEnd;
+		else if(!isSelected && !isSelectedEnd && isSelectedBetween) highlightStyle += " "+style.selectionBetween;
+
+		if(dragging==1 && !isSelected && !isDisabled) backgroundColor = (typeof theme.selectionColor == 'function') ? theme.selectionColor(mmt) : theme.selectionColor;
+		else if(dragging==-1 && !isSelectedEnd && !isDisabled) backgroundColor = (typeof theme.selectionColor == 'function') ? theme.selectionColor(mmt) : theme.selectionColor;
+		else if(isDisabled) backgroundColor = (typeof theme.selectionDisabledColor == 'function') ? theme.selectionDisabledColor(mmt) : theme.selectionDisabledColor;
+
+		var isSelectedRange = isSelected || isSelectedBetween || isSelectedEnd;
+
+		if (isSelectedRange) dayContainerStyles.backgroundColor = theme.selectionRangeColor;
+
+		var selectedStart = isSelected && (!isSelectedEnd || dragging!==0) ? style.selectedStart : "";
+		var selectedEnd = isSelectedEnd ? style.selectedEnd : "";
+
+		var rangeContainerStyles = `${selectedStart} ${selectedEnd}`;
+	}
+
 	return (
 		<li
-			style={(isToday) ? {color: theme.todayColor} : null}
-			className={`${style.root}${isToday ? ' ' + style.today : ''}${(isSelected || isSelectedBetween || isSelectedEnd) ? ' ' + style.selected : ''}${isDisabled ? ' ' + style.disabled : ' ' + style.enabled}`}
+			style={dayContainerStyles}
+			className={`${style.root} ${isToday ? style.today : ''} ${isSelected || isSelectedRange ? style.selected : ''} ${rangeContainerStyles ? rangeContainerStyles : ""} ${isDisabled ? style.disabled : style.enabled}`}
 			data-date={yyyymmdd}
 			onClick={(!isDisabled && handleDayClick) ? handleDayClick.bind(this, mmt) : null}
 			onMouseDown={(!isDisabled && handleDayDown) ? handleDayDown.bind(this, mmt) : null}
@@ -41,7 +57,7 @@ export default function Day({currentYear, date, day, badge, handleDayClick, hand
 				</div>
 			}
 			{(isSelectedBetween) &&
-				<div className={highlightStyle} style={{backgroundColor: backgroundColor, color: theme.textColor.active}}>
+				<div className={highlightStyle} style={{backgroundColor: theme.selectionRangeColor, color: theme.textColor.active}}>
 					<span className={style.day}>{day}</span>
 				</div>
 			}
