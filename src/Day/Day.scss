@@ -89,7 +89,7 @@
     }
     &.selected {
         position: relative;
-        height: 52px;
+        height: $rowHeight - 4px;
         top: 4px;
 
         > .month, > .year {
@@ -131,10 +131,11 @@
             @include semicircleR();
         }
         .selectionBetween, .selectionStart, .selectionEnd {
-            height: 44px;
-            width: 48px;
-            left: 53%;
-            top: 58%;
+            height: 80%;
+            width: 80%;
+            left: initial;
+            right: 10%;
+            top: 60%;
 
             .month {
                 top: 6px;

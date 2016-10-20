@@ -220,11 +220,17 @@
       background-color: #2581ca;
       color: #fff; }
   .Cal__Day__root.Cal__Day__selected {
-    position: relative; }
+    position: relative;
+    height: 52px;
+    top: 4px; }
     .Cal__Day__root.Cal__Day__selected > .Cal__Day__month, .Cal__Day__root.Cal__Day__selected > .Cal__Day__year {
       display: none; }
     .Cal__Day__root.Cal__Day__selected:before {
       display: none; }
+    .Cal__Day__root.Cal__Day__selected.Cal__Day__selectedStart {
+      border-radius: 15% 0% 0% 15%; }
+    .Cal__Day__root.Cal__Day__selected.Cal__Day__selectedEnd {
+      border-radius: 0% 15% 15% 0%; }
     .Cal__Day__root.Cal__Day__selected .Cal__Day__selection {
       content: '';
       position: absolute;
@@ -246,11 +252,19 @@
         font-weight: bold;
         font-size: 18px; }
     .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionStart {
-      border-radius: 50% 0% 0% 50%; }
+      border-radius: 15% 0% 0% 15%; }
     .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionEnd {
-      border-radius: 0% 50% 50% 0%; }
-    .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionBetween {
-      border-radius: 0%; }
+      border-radius: 0% 15% 15% 0%; }
+    .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionBetween, .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionStart, .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionEnd {
+      height: 80%;
+      width: 80%;
+      left: initial;
+      right: 10%;
+      top: 60%; }
+      .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionBetween .Cal__Day__month, .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionStart .Cal__Day__month, .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionEnd .Cal__Day__month {
+        top: 6px; }
+      .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionBetween .Cal__Day__day, .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionStart .Cal__Day__day, .Cal__Day__root.Cal__Day__selected .Cal__Day__selectionEnd .Cal__Day__day {
+        top: 2px; }
   .Cal__Day__root.Cal__Day__disabled {
     cursor: default;
     color: #AAA;
@@ -296,7 +310,7 @@
     text-align: right; }
     .Cal__Month__row:first-child li {
       position: relative;
-      top: 1px;
+      top: 5px;
       z-index: 1;
       margin-top: -1px;
       background-color: #FFF;
