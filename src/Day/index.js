@@ -1,7 +1,7 @@
 import React from 'react';
 const style = require('./Day.scss');
 
-export default function Day({currentYear, date, day, badge, handleDayClick, handleDayDown, handleDayOver, handleDayUp, handleTouchStart, isDisabled, isToday, isSelected, isHovered, dragging, isSelectedBetween, isSelectedEnd, monthShort, locale, theme}) {
+export default function Day({currentYear, date, day, badge, handleDayClick, handleDayDoubleClick, handleDayDown, handleDayOver, handleDayUp, handleTouchStart, isDisabled, isToday, isSelected, isHovered, dragging, isSelectedBetween, isSelectedEnd, monthShort, locale, theme}) {
 	var {date: mmt, yyyymmdd} = date;
 	var year = mmt.year();
 
@@ -25,6 +25,7 @@ export default function Day({currentYear, date, day, badge, handleDayClick, hand
 			className={`${style.root}${isToday ? ' ' + style.today : ''}${(isSelected || isSelectedBetween || isSelectedEnd) ? ' ' + style.selected : ''}${isDisabled ? ' ' + style.disabled : ' ' + style.enabled}`}
 			data-date={yyyymmdd}
 			onClick={(!isDisabled && handleDayClick) ? handleDayClick.bind(this, mmt) : null}
+			onDoubleClick={(!isDisabled && handleDayDoubleClick) ? handleDayDoubleClick.bind(this, mmt) : null}
 			onMouseDown={(!isDisabled && handleDayDown) ? handleDayDown.bind(this, mmt) : null}
 			onMouseOver={(!isDisabled && handleDayOver) ? handleDayOver.bind(this, mmt) : null}
 			onMouseUp={(!isDisabled && handleDayUp) ? handleDayUp.bind(this, mmt) : null}

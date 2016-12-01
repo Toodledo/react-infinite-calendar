@@ -8,7 +8,7 @@ export default class Month extends Component {
 		return (!nextProps.isScrolling && !this.props.isScrolling);
 	}
 	renderRows() {
-		let {disabledDates, disabledDays, displayDate, badges, locale, maxDate, minDate, onDaySelect,onDayDown,onDayOver,onDayUp, onTouchStart,rowHeight, rows, selectedDate, selectedHovering,dragging, rangeSelectionEndDate, today, theme} = this.props;
+		let {disabledDates, disabledDays, displayDate, badges, locale, maxDate, minDate, onDaySelect,onDayDoubleClick, onDayDown,onDayOver,onDayUp, onTouchStart,rowHeight, rows, selectedDate, selectedHovering,dragging, rangeSelectionEndDate, today, theme} = this.props;
 		let currentYear = today.date.year();
 		let monthShort = displayDate.format('MMM');
 		let monthRows = [];
@@ -54,6 +54,7 @@ export default class Month extends Component {
 						day={day}
 						badge={badge}
 						handleDayClick={onDaySelect}
+						handleDayDoubleClick={onDayDoubleClick}
 						handleDayDown={onDayDown}
 						handleDayOver={onDayOver}
 						handleDayUp={onDayUp}
