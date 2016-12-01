@@ -1,6 +1,6 @@
 {
   "name": "react-infinite-calendar",
-  "version": "1.1.17",
+  "version": "1.1.18",
   "description": "Infinite scrolling date-picker built with React, with localization, themes, keyboard support, and more.",
   "author": {
     "name": "Clauderic Demers",
@@ -47,6 +47,7 @@
     "clean:es6": "rimraf dist/es6",
     "clean:commonjs": "rimraf dist/commonjs",
     "test": "cross-env BABEL_ENV=testing karma start --single-run --browsers PhantomJS",
+    "testing": "cross-env BABEL_ENV=testing karma start --browsers PhantomJS",
     "codecov": "cat coverage/*/lcov.info | codecov"
   },
   "dependencies": {
@@ -55,7 +56,7 @@
     "lodash": "^4.12.0",
     "moment": "^2.13.0",
     "moment-range": "^2.2.0",
-    "react-virtualized": "^7.3.2"
+    "react-virtualized": "^7.17.1"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0",
