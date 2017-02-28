@@ -129,6 +129,7 @@ export default class MonthList extends Component {
       selected,
       showOverlay,
       theme,
+      badges,
       today,
     } = this.props;
 
@@ -152,6 +153,7 @@ export default class MonthList extends Component {
         showOverlay={showOverlay}
         today={today}
         theme={theme}
+        badges={badges}
         style={style}
         locale={locale}
         passThrough={passThrough}

@@ -21,6 +21,7 @@ export default class Month extends PureComponent {
       selected,
       today,
       theme,
+      badges,
       passThrough,
     } = this.props;
     const currentYear = today.getFullYear();
@@ -57,6 +58,9 @@ export default class Month extends PureComponent {
 					disabledDates && disabledDates.length && disabledDates.indexOf(date) !== -1
 				);
 
+        var badge = "";
+        if(badges && badges[date]) badge = badges[date];
+
         days[k] = (
 					<DayComponent
 						key={`day-${day}`}
@@ -71,6 +75,7 @@ export default class Month extends PureComponent {
             monthShort={monthShort}
 						theme={theme}
             year={year}
+            badge={badge}
             {...passThrough.Day}
 					/>
 				);
