@@ -1,7 +1,7 @@
 {
-  "name": "react-infinite-calendar",
-  "version": "2.1.2",
-  "description": "Infinite scrolling date-picker built with React, with localization, themes, keyboard support, and more.",
+  "name": "react-infinite-calendar-td",
+  "version": "2.1.3",
+  "description": "Customzied for Toodledo",
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": [
@@ -51,18 +51,18 @@
     "react-dom": "^15.4.2"
   },
   "author": {
-    "name": "Clauderic Demers",
-    "email": "me@ced.io"
+    "name": "Jake Olefsky",
+    "email": "admin@toodledo.com"
   },
-  "user": "clauderic",
-  "homepage": "https://github.com/clauderic/react-infinite-calendar",
+  "user": "offsky",
+  "homepage": "https://github.com/Toodledo/react-infinite-calendar",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/clauderic/react-infinite-calendar.git"
+    "url": "https://github.com/Toodledo/react-infinite-calendar.git"
   },
   "bugs": {
-    "url": "https://github.com/clauderic/react-infinite-calendar/issues"
+    "url": "https://github.com/Toodledo/react-infinite-calendar/issues"
   },
   "keywords": [
     "react",
