@@ -41,6 +41,7 @@ export const withDefaultProps = defaultProps({
   tabIndex: 1,
   width: 400,
   YearsComponent: Years,
+  badges:{}
 });
 
 export default class Calendar extends Component {
@@ -92,6 +93,7 @@ export default class Calendar extends Component {
     onSelect: PropTypes.func,
     rowHeight: PropTypes.number,
     tabIndex: PropTypes.number,
+    badges: PropTypes.object,
     theme: PropTypes.shape({
       floatingNav: PropTypes.shape({
         background: PropTypes.string,
@@ -276,6 +278,7 @@ export default class Calendar extends Component {
       selected,
 			tabIndex,
 			width,
+      badges,
       YearsComponent,
 		} = this.props;
     const {
@@ -352,6 +355,7 @@ export default class Calendar extends Component {
               overscanMonthCount={overscanMonthCount}
               passThrough={passThrough}
               theme={theme}
+              badges={badges}
               today={today}
               rowHeight={rowHeight}
               selected={selected}

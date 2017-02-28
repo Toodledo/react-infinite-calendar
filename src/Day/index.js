@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react';
 import classNames from 'classnames';
 import parse from 'date-fns/parse';
+import isBefore from 'date-fns/is_before';
 import styles from './Day.scss';
 
 export default class Day extends PureComponent {
@@ -54,6 +55,7 @@ export default class Day extends PureComponent {
       isSelected,
       monthShort,
       theme: {selectionColor, todayColor},
+      badge,
       year,
     } = this.props;
     let color;
@@ -65,6 +67,10 @@ export default class Day extends PureComponent {
     } else if (isToday) {
       color = todayColor;
     }
+
+    var today = new Date();
+    var badgeStyle = "Cal__Day__badge";
+    if(isBefore(date,new Date())) badgeStyle += " Cal__Day__badge_overdue";
 
     return (
       <li
@@ -82,6 +88,7 @@ export default class Day extends PureComponent {
       >
         {day === 1 && <span className={styles.month}>{monthShort}</span>}
         {isToday ? <span>{day}</span> : day}
+        {badge!=="" && <span className={badgeStyle}>{badge}</span>}
         {day === 1 &&
           currentYear !== year &&
           <span className={styles.year}>{year}</span>}
