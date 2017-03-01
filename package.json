@@ -1,6 +1,6 @@
 {
   "name": "react-infinite-calendar-td",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "Customzied for Toodledo",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -25,7 +25,7 @@
     "classnames": "^2.2.5",
     "date-fns": "^1.27.2",
     "dom-helpers": "^3.2.1",
-    "react-tiny-virtual-list": "^1.0.0",
+    "react-tiny-virtual-list": "^2.0.0",
     "recompose": "^0.22.0"
   },
   "peerDependencies": {
